@@ -1,0 +1,21 @@
+
+{
+  "id": "./",
+  "name": "PANDE-CALC",
+  "short_name": "PANDE-CALC",
+  "description": "Pandesal Sourdough Calculator",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17231d",
+  "theme_color": "#17231d",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

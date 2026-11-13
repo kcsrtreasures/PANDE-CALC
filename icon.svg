@@ -1,0 +1,39 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 512 512">
+
+  <rect width="512" height="512" rx="110" fill="#17231d"/>
+
+  <circle cx="256" cy="256" r="170" fill="#263a2d"/>
+
+  <path
+    d="M150 290
+       C150 220 195 155 256 155
+       C317 155 362 220 362 290
+       C362 340 315 365 256 365
+       C197 365 150 340 150 290Z"
+    fill="#e9b85f"/>
+
+  <path
+    d="M190 270
+       C200 225 226 200 256 200
+       C286 200 312 225 322 270"
+    fill="none"
+    stroke="#fff2d3"
+    stroke-width="17"
+    stroke-linecap="round"/>
+
+  <circle cx="222" cy="285" r="8" fill="#8d5c2e"/>
+  <circle cx="256" cy="260" r="8" fill="#8d5c2e"/>
+  <circle cx="290" cy="285" r="8" fill="#8d5c2e"/>
+
+  <text x="256" y="430"
+        text-anchor="middle"
+        font-family="Arial, sans-serif"
+        font-size="34"
+        font-weight="bold"
+        fill="#f5f1e7">
+    PANDE
+  </text>
+
+</svg>

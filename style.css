@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
-
 :root {
   --bg: #17231d;
   --panel: #223128;
@@ -22,11 +20,16 @@ body {
     radial-gradient(ellipse at 75% 0%, #304332 0, transparent 45%),
     var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", "Segoe UI", sans-serif;
 }
 
-button, input {
+button,
+input {
   font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 .topbar {
@@ -35,11 +38,12 @@ button, input {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 15px;
   border-bottom: 1px solid #ffffff18;
 }
 
 .brand {
-  font: 800 19px Manrope, sans-serif;
+  font: 800 19px "Manrope", "Segoe UI", sans-serif;
   letter-spacing: .04em;
 }
 
@@ -49,24 +53,53 @@ button, input {
 
 .brand small {
   display: block;
-  font: 600 9px 'DM Sans', sans-serif;
+  font: 600 9px "Segoe UI", sans-serif;
   letter-spacing: .17em;
   color: var(--muted);
   margin-top: 3px;
 }
 
-button {
-  cursor: pointer;
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.connection-status {
+  font-size: 10px;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.connection-status.offline {
+  color: var(--danger);
 }
 
 .reset-btn {
   background: none;
   border: 0;
   color: var(--muted);
+  font-size: 12px;
 }
 
 .reset-btn:hover {
   color: var(--gold);
+}
+
+.install-btn {
+  background: var(--gold);
+  color: #17231d;
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.install-btn[hidden] {
+  display: none;
 }
 
 .container {
@@ -78,7 +111,8 @@ button {
   padding: 55px 0 35px;
 }
 
-.eyebrow, .step {
+.eyebrow,
+.step {
   color: var(--gold);
   font-size: 10px;
   font-weight: 700;
@@ -86,7 +120,7 @@ button {
 }
 
 h1 {
-  font: 800 clamp(38px, 6vw, 62px)/1.08 Manrope, sans-serif;
+  font: 800 clamp(38px, 6vw, 62px)/1.08 "Manrope", "Segoe UI", sans-serif;
   letter-spacing: -.05em;
   margin: 14px 0;
 }
@@ -115,10 +149,11 @@ h1 span {
   border-radius: 19px;
   padding: 24px;
   box-shadow: 0 15px 45px #0002;
+  min-width: 0;
 }
 
 .panel h2 {
-  font: 700 23px Manrope, sans-serif;
+  font: 700 23px "Manrope", "Segoe UI", sans-serif;
   margin: 8px 0;
 }
 
@@ -129,7 +164,8 @@ h1 span {
   margin-bottom: 22px;
 }
 
-.ingredient-head, .ingredient-row {
+.ingredient-head,
+.ingredient-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 110px 28px;
   align-items: center;
@@ -152,20 +188,7 @@ h1 span {
 .ingredient-name {
   font-size: 13px;
   font-weight: 600;
-}
-
-.optional {
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.optional::after {
-  content: "OPTIONAL";
-  display: block;
-  color: var(--gold);
-  font-size: 8px;
-  letter-spacing: .1em;
-  margin-top: 3px;
+  overflow-wrap: anywhere;
 }
 
 .amount {
@@ -177,6 +200,7 @@ h1 span {
   padding: 10px 7px;
   text-align: right;
   outline: none;
+  min-width: 0;
 }
 
 .amount:focus {
@@ -188,6 +212,7 @@ h1 span {
   border: 0;
   color: #819083;
   font-size: 18px;
+  padding: 3px;
 }
 
 .remove:hover {
@@ -202,6 +227,7 @@ h1 span {
   padding: 9px 12px;
   font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .small-btn:hover {
@@ -227,7 +253,7 @@ h1 span {
 
 .total-row strong {
   color: var(--green);
-  font: 700 21px Manrope, sans-serif;
+  font: 700 21px "Manrope", "Segoe UI", sans-serif;
 }
 
 .note {
@@ -287,11 +313,12 @@ h1 span {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   margin: 18px 0 8px;
 }
 
 .percentage-value {
-  font: 800 28px Manrope, sans-serif;
+  font: 800 28px "Manrope", "Segoe UI", sans-serif;
   color: var(--gold);
 }
 
@@ -328,7 +355,7 @@ input[type="range"] {
 }
 
 .result-number {
-  font: 800 clamp(42px, 5vw, 54px) Manrope, sans-serif;
+  font: 800 clamp(42px, 5vw, 54px) "Manrope", "Segoe UI", sans-serif;
   margin: 12px 0 5px;
   letter-spacing: -.05em;
 }
@@ -360,6 +387,7 @@ input[type="range"] {
 
 .result-meta strong {
   color: #f3d18d;
+  text-align: right;
 }
 
 .explanation {
@@ -386,6 +414,22 @@ input[type="range"] {
   line-height: 1.7;
 }
 
+.ios-install-note {
+  display: none;
+  background: #26372c;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 15px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 20px 0;
+}
+
+.ios-install-note strong {
+  color: var(--gold);
+}
+
 footer {
   text-align: center;
   color: #829084;
@@ -393,19 +437,38 @@ footer {
   padding: 15px 0 35px;
 }
 
-@media(max-width: 800px) {
+@media (max-width: 800px) {
   .layout {
     grid-template-columns: 1fr;
   }
 }
 
-@media(max-width: 480px) {
+@media (max-width: 600px) {
+  .topbar {
+    align-items: flex-start;
+    padding: 14px 4%;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .connection-status {
+    width: 100%;
+    text-align: right;
+  }
+
+  .container {
+    width: 92%;
+  }
+
   .panel {
     padding: 17px;
   }
 
-  .ingredient-head, .ingredient-row {
-    grid-template-columns: minmax(0,1fr) 90px 22px;
+  .ingredient-head,
+  .ingredient-row {
+    grid-template-columns: minmax(0, 1fr) 90px 22px;
     gap: 6px;
   }
 
@@ -419,5 +482,24 @@ footer {
 
   .intro {
     padding-top: 40px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand {
+    font-size: 16px;
+  }
+
+  .brand small {
+    font-size: 8px;
+  }
+
+  .reset-btn {
+    font-size: 10px;
+  }
+
+  .small-btn {
+    padding: 8px;
+    font-size: 10px;
   }
 }

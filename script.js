@@ -1,19 +1,18 @@
 
 const DEFAULT_INGREDIENTS = [
-  { name: "Bread flour", role: "flour", optional: false, amount: "" },
-  { name: "All-purpose flour", role: "flour", optional: false, amount: "" },
-  { name: "Water", role: "other", optional: false, amount: "" },
-  { name: "Milk", role: "other", optional: false, amount: "" },
-  { name: "Sugar", role: "other", optional: false, amount: "" },
-  { name: "Salt", role: "other", optional: false, amount: "" },
-  { name: "Butter", role: "other", optional: false, amount: "" },
-  { name: "Oil", role: "other", optional: false, amount: "" },
+  { name: "Bread flour", role: "flour", amount: "" },
+  { name: "All-purpose flour", role: "flour", amount: "" },
+  { name: "Water", role: "other", amount: "" },
+  { name: "Milk", role: "other", amount: "" },
+  { name: "Sugar", role: "other", amount: "" },
+  { name: "Salt", role: "other", amount: "" },
+  { name: "Butter", role: "other", amount: "" },
+  { name: "Oil", role: "other", amount: "" }
 ];
 
 const STORAGE_KEY = "pandeCalc.recipe.v1";
 
 let ingredients = loadIngredients();
-let currentPlan = "same";
 
 const rows = document.getElementById("ingredientRows");
 const totalFlour = document.getElementById("totalFlour");
@@ -21,13 +20,26 @@ const starterResult = document.getElementById("starterResult");
 const percentageSlider = document.getElementById("starterPercentage");
 const percentageValue = document.getElementById("percentageValue");
 
+let deferredInstallPrompt = null;
+
+// ----------------------------------------
+// LOAD AND SAVE INGREDIENTS
+// ----------------------------------------
+
 function loadIngredients() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
 
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed;
+
+      if (Array.isArray(parsed)) {
+        return parsed.map(item => ({
+          name: String(item.name || "Ingredient"),
+          role: item.role === "flour" ? "flour" : "other",
+          amount: item.amount ?? ""
+        }));
+      }
     }
   } catch (error) {
     console.warn("Could not load saved recipe.", error);
@@ -37,8 +49,16 @@ function loadIngredients() {
 }
 
 function saveIngredients() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(ingredients));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ingredients));
+  } catch (error) {
+    console.warn("Could not save recipe.", error);
+  }
 }
+
+// ----------------------------------------
+// RENDER INGREDIENTS
+// ----------------------------------------
 
 function renderIngredients() {
   rows.innerHTML = "";
@@ -48,8 +68,7 @@ function renderIngredients() {
     row.className = "ingredient-row";
 
     const name = document.createElement("div");
-    name.className = "ingredient-name" +
-      (item.optional ? " optional" : "");
+    name.className = "ingredient-name";
     name.textContent = item.name;
 
     const input = document.createElement("input");
@@ -59,6 +78,7 @@ function renderIngredients() {
     input.placeholder = "0";
     input.className = "amount";
     input.value = item.amount ?? "";
+
     input.setAttribute(
       "aria-label",
       item.name + " amount in grams"
@@ -66,6 +86,7 @@ function renderIngredients() {
 
     input.addEventListener("input", () => {
       ingredients[index].amount = input.value;
+
       saveIngredients();
       calculate();
     });
@@ -75,9 +96,14 @@ function renderIngredients() {
     remove.type = "button";
     remove.textContent = "×";
     remove.title = "Remove ingredient";
+    remove.setAttribute(
+      "aria-label",
+      "Remove " + item.name
+    );
 
     remove.addEventListener("click", () => {
       ingredients.splice(index, 1);
+
       saveIngredients();
       renderIngredients();
       calculate();
@@ -88,6 +114,10 @@ function renderIngredients() {
   });
 }
 
+// ----------------------------------------
+// CALCULATIONS
+// ----------------------------------------
+
 function getTotalFlour() {
   return ingredients
     .filter(item => item.role === "flour")
@@ -95,7 +125,9 @@ function getTotalFlour() {
       const amount = Number(item.amount);
 
       return sum + (
-        Number.isFinite(amount) && amount > 0 ? amount : 0
+        Number.isFinite(amount) && amount > 0
+          ? amount
+          : 0
       );
     }, 0);
 }
@@ -140,23 +172,27 @@ function calculate() {
     formatNumber(flour) + " g × " + percentage + "%";
 
   document.getElementById("explanation").textContent =
-    "Your " + formatNumber(flour) + " g of total flour at " +
-    percentage + "% starter weight requires " +
+    "Your " + formatNumber(flour) +
+    " g of total flour at " + percentage +
+    "% starter weight requires " +
     formatNumber(starterGrams) +
     " g of fully active sourdough starter.";
 }
 
-function selectPlan(plan) {
-  currentPlan = plan;
+// ----------------------------------------
+// FERMENTATION PLAN
+// ----------------------------------------
 
+function selectPlan(plan) {
   document.getElementById("sameCard")
     .classList.toggle("selected", plan === "same");
 
   document.getElementById("overnightCard")
     .classList.toggle("selected", plan === "overnight");
 
-  // Suggested starting percentages.
-  // You can adjust the slider after selecting the plan.
+  // Same-day: 20%
+  // Overnight refrigerated: 10%
+
   percentageSlider.value = plan === "same" ? 20 : 10;
 
   calculate();
@@ -169,6 +205,10 @@ document.querySelectorAll('input[name="plan"]').forEach(input => {
 });
 
 percentageSlider.addEventListener("input", calculate);
+
+// ----------------------------------------
+// ADD INGREDIENT
+// ----------------------------------------
 
 document.getElementById("addBtn").addEventListener("click", () => {
   const name = prompt("Enter the ingredient name:");
@@ -183,7 +223,6 @@ document.getElementById("addBtn").addEventListener("click", () => {
   ingredients.push({
     name: name.trim(),
     role: isFlour ? "flour" : "other",
-    optional: false,
     amount: ""
   });
 
@@ -191,6 +230,10 @@ document.getElementById("addBtn").addEventListener("click", () => {
   renderIngredients();
   calculate();
 });
+
+// ----------------------------------------
+// RESET
+// ----------------------------------------
 
 document.getElementById("resetBtn").addEventListener("click", () => {
   const confirmed = confirm(
@@ -205,6 +248,89 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   renderIngredients();
   calculate();
 });
+
+// ----------------------------------------
+// ONLINE / OFFLINE STATUS
+// ----------------------------------------
+
+function updateConnectionStatus() {
+  const status = document.getElementById("connectionStatus");
+
+  if (navigator.onLine) {
+    status.textContent = "● Online";
+    status.classList.remove("offline");
+  } else {
+    status.textContent = "● Offline mode";
+    status.classList.add("offline");
+  }
+}
+
+window.addEventListener("online", updateConnectionStatus);
+window.addEventListener("offline", updateConnectionStatus);
+
+updateConnectionStatus();
+
+// ----------------------------------------
+// ANDROID INSTALL PROMPT
+// ----------------------------------------
+
+const installBtn = document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+
+  deferredInstallPrompt = event;
+  installBtn.hidden = false;
+});
+
+installBtn.addEventListener("click", async () => {
+  if (!deferredInstallPrompt) return;
+
+  deferredInstallPrompt.prompt();
+
+  await deferredInstallPrompt.userChoice;
+
+  deferredInstallPrompt = null;
+  installBtn.hidden = true;
+});
+
+window.addEventListener("appinstalled", () => {
+  installBtn.hidden = true;
+  deferredInstallPrompt = null;
+});
+
+// ----------------------------------------
+// IPHONE INSTALL GUIDANCE
+// ----------------------------------------
+
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+if (isIOS && !isStandalone) {
+  document.getElementById("iosInstallNote").style.display = "block";
+}
+
+// ----------------------------------------
+// REGISTER SERVICE WORKER
+// ----------------------------------------
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      await navigator.serviceWorker.register("./service-worker.js");
+
+      console.log("PANDE-CALC offline support is ready.");
+    } catch (error) {
+      console.error("Service worker registration failed:", error);
+    }
+  });
+}
+
+// ----------------------------------------
+// START APP
+// ----------------------------------------
 
 renderIngredients();
 calculate();

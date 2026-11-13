@@ -4,10 +4,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <meta name="theme-color" content="#17231d">
+  <meta name="description" content="PANDE-CALC calculates the amount of fully active sourdough starter needed for your pandesal recipe.">
+
   <title>PANDE-CALC | Pandesal Sourdough Calculator</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="./style.css">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PANDE-CALC">
 </head>
+
 <body>
 
 <header class="topbar">
@@ -15,14 +27,32 @@
     PANDE<span>-CALC</span>
     <small>PANDESAL SOURDOUGH CALCULATOR</small>
   </div>
-  <button class="reset-btn" id="resetBtn">Reset quantities</button>
+
+  <div class="topbar-actions">
+    <span id="connectionStatus" class="connection-status">
+      Checking connection...
+    </span>
+
+    <button class="install-btn" id="installBtn" hidden>
+      Install App
+    </button>
+
+    <button class="reset-btn" id="resetBtn">
+      Reset quantities
+    </button>
+  </div>
 </header>
 
 <main class="container">
 
   <section class="intro">
     <div class="eyebrow">YOUR RECIPE. YOUR STARTER.</div>
-    <h1>Make your pandesal<br><span>with sourdough.</span></h1>
+
+    <h1>
+      Make your pandesal<br>
+      <span>with sourdough.</span>
+    </h1>
+
     <p>
       Enter your own pandesal ingredients and quantities.
       PANDE-CALC calculates how much fully active sourdough
@@ -32,13 +62,19 @@
 
   <section class="layout">
 
+    <!-- INGREDIENTS -->
+
     <div class="panel">
+
       <div class="panel-heading">
         <div>
           <div class="step">01 / YOUR FORMULA</div>
           <h2>Your ingredients</h2>
         </div>
-        <button class="small-btn" id="addBtn">＋ Add ingredient</button>
+
+        <button class="small-btn" id="addBtn">
+          ＋ Add ingredient
+        </button>
       </div>
 
       <p class="helper">
@@ -63,7 +99,10 @@
         Bread flour and all-purpose flour count toward total flour.
         You can add more flour types using Add Ingredient.
       </div>
+
     </div>
+
+    <!-- CALCULATOR -->
 
     <div class="panel">
 
@@ -73,8 +112,15 @@
       <div class="plan-options">
 
         <label class="plan-card selected" id="sameCard">
-          <input type="radio" name="plan" value="same" checked>
+          <input
+            type="radio"
+            name="plan"
+            value="same"
+            checked
+          >
+
           <span class="plan-icon">☀</span>
+
           <span class="plan-copy">
             <strong>Same-day</strong>
             <small>Make and bake on the same day</small>
@@ -82,8 +128,14 @@
         </label>
 
         <label class="plan-card" id="overnightCard">
-          <input type="radio" name="plan" value="overnight">
+          <input
+            type="radio"
+            name="plan"
+            value="overnight"
+          >
+
           <span class="plan-icon">☾</span>
+
           <span class="plan-copy">
             <strong>Overnight</strong>
             <small>Fermentation in the refrigerator</small>
@@ -96,8 +148,13 @@
       <h2>Starter percentage</h2>
 
       <div class="percentage-row">
-        <span class="helper">Starter weight relative to total flour</span>
-        <span class="percentage-value" id="percentageValue">20%</span>
+        <span class="helper">
+          Starter weight relative to total flour
+        </span>
+
+        <span class="percentage-value" id="percentageValue">
+          20%
+        </span>
       </div>
 
       <input
@@ -119,10 +176,14 @@
         The starter amount updates automatically.
       </p>
 
-      <div class="result-label step">04 / YOUR RESULT</div>
+      <div class="result-label step">
+        04 / YOUR RESULT
+      </div>
+
       <h2>Starter required</h2>
 
       <div class="result-card">
+
         <div class="result-caption">
           FULLY ACTIVE SOURDOUGH STARTER
         </div>
@@ -139,8 +200,11 @@
 
         <div class="result-meta">
           <span>Calculation</span>
-          <strong id="calculationText">Waiting for flour</strong>
+          <strong id="calculationText">
+            Waiting for flour
+          </strong>
         </div>
+
       </div>
 
       <div class="explanation" id="explanation">
@@ -149,17 +213,25 @@
       </div>
 
     </div>
+
   </section>
 
   <div class="info-box">
     <p>
-      <strong>Important:</strong> The percentage is starter weight
-      divided by total recipe flour, not PFF. The initial suggestions
-      are 20% for same-day and 15% for overnight refrigeration.
+      <strong>Important:</strong>
+      The percentage is starter weight divided by total recipe flour.
+      The initial suggestions are 20% for same-day fermentation
+      and 10% for overnight refrigeration.
       These are starting estimates, not guaranteed fermentation formulas.
       Actual timing depends on starter activity, dough temperature,
       room temperature and recipe composition.
     </p>
+  </div>
+
+  <div class="ios-install-note" id="iosInstallNote">
+    <strong>Using an iPhone?</strong>
+    Open this page in Safari, tap the Share button, then choose
+    "Add to Home Screen" to install PANDE-CALC.
   </div>
 
   <footer>
@@ -168,6 +240,7 @@
 
 </main>
 
-<script src="script.js"></script>
+<script src="./script.js"></script>
+
 </body>
 </html>
