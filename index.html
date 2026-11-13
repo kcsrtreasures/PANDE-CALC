@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17231d">
+  <title>PANDE-CALC | Pandesal Sourdough Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    PANDE<span>-CALC</span>
+    <small>PANDESAL SOURDOUGH CALCULATOR</small>
+  </div>
+  <button class="reset-btn" id="resetBtn">Reset quantities</button>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <div class="eyebrow">YOUR RECIPE. YOUR STARTER.</div>
+    <h1>Make your pandesal<br><span>with sourdough.</span></h1>
+    <p>
+      Enter your own pandesal ingredients and quantities.
+      PANDE-CALC calculates how much fully active sourdough
+      starter to add based on your flour quantity and settings.
+    </p>
+  </section>
+
+  <section class="layout">
+
+    <div class="panel">
+      <div class="panel-heading">
+        <div>
+          <div class="step">01 / YOUR FORMULA</div>
+          <h2>Your ingredients</h2>
+        </div>
+        <button class="small-btn" id="addBtn">＋ Add ingredient</button>
+      </div>
+
+      <p class="helper">
+        Enter your own recipe quantities in grams.
+        Leave unused ingredients blank.
+      </p>
+
+      <div class="ingredient-head">
+        <span>INGREDIENT</span>
+        <span>AMOUNT (g)</span>
+        <span></span>
+      </div>
+
+      <div id="ingredientRows"></div>
+
+      <div class="total-row">
+        <span>Total flour</span>
+        <strong id="totalFlour">0 g</strong>
+      </div>
+
+      <div class="note">
+        Bread flour and all-purpose flour count toward total flour.
+        You can add more flour types using Add Ingredient.
+      </div>
+    </div>
+
+    <div class="panel">
+
+      <div class="step">02 / FERMENTATION</div>
+      <h2>Choose your plan</h2>
+
+      <div class="plan-options">
+
+        <label class="plan-card selected" id="sameCard">
+          <input type="radio" name="plan" value="same" checked>
+          <span class="plan-icon">☀</span>
+          <span class="plan-copy">
+            <strong>Same-day</strong>
+            <small>Make and bake on the same day</small>
+          </span>
+        </label>
+
+        <label class="plan-card" id="overnightCard">
+          <input type="radio" name="plan" value="overnight">
+          <span class="plan-icon">☾</span>
+          <span class="plan-copy">
+            <strong>Overnight</strong>
+            <small>Fermentation in the refrigerator</small>
+          </span>
+        </label>
+
+      </div>
+
+      <div class="step">03 / STARTER SETTINGS</div>
+      <h2>Starter percentage</h2>
+
+      <div class="percentage-row">
+        <span class="helper">Starter weight relative to total flour</span>
+        <span class="percentage-value" id="percentageValue">20%</span>
+      </div>
+
+      <input
+        type="range"
+        id="starterPercentage"
+        min="5"
+        max="50"
+        step="1"
+        value="20"
+      >
+
+      <div class="range-labels">
+        <span>5%</span>
+        <span>50%</span>
+      </div>
+
+      <p class="helper">
+        Change the percentage whenever you want.
+        The starter amount updates automatically.
+      </p>
+
+      <div class="result-label step">04 / YOUR RESULT</div>
+      <h2>Starter required</h2>
+
+      <div class="result-card">
+        <div class="result-caption">
+          FULLY ACTIVE SOURDOUGH STARTER
+        </div>
+
+        <div class="result-number" id="starterResult">
+          — <small>g</small>
+        </div>
+
+        <div class="result-sub" id="resultDescription">
+          Enter your flour quantities to calculate.
+        </div>
+
+        <div class="result-divider"></div>
+
+        <div class="result-meta">
+          <span>Calculation</span>
+          <strong id="calculationText">Waiting for flour</strong>
+        </div>
+      </div>
+
+      <div class="explanation" id="explanation">
+        Starter amount is calculated from total flour multiplied
+        by your selected starter percentage.
+      </div>
+
+    </div>
+  </section>
+
+  <div class="info-box">
+    <p>
+      <strong>Important:</strong> The percentage is starter weight
+      divided by total recipe flour, not PFF. The initial suggestions
+      are 20% for same-day and 15% for overnight refrigeration.
+      These are starting estimates, not guaranteed fermentation formulas.
+      Actual timing depends on starter activity, dough temperature,
+      room temperature and recipe composition.
+    </p>
+  </div>
+
+  <footer>
+    PANDE-CALC · Your recipe stays in your browser.
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
