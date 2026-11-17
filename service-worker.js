@@ -1,4 +1,4 @@
-const CACHE_NAME = "pande-calc-v2";
+const CACHE_NAME = "pande-calc-v3";
 
 const APP_FILES = [
   "./",
@@ -15,17 +15,32 @@ self.addEventListener(
   event => {
 
     event.waitUntil(
-      caches.open(CACHE_NAME)
-        .then(cache => {
-          return cache.addAll(APP_FILES);
-        })
-        .then(() => {
+
+      caches.open(
+        CACHE_NAME
+      )
+      .then(
+        cache => {
+
+          return cache.addAll(
+            APP_FILES
+          );
+
+        }
+      )
+      .then(
+        () => {
+
           return self.skipWaiting();
-        })
+
+        }
+      )
+
     );
 
   }
 );
+
 
 
 self.addEventListener(
@@ -35,29 +50,40 @@ self.addEventListener(
     event.waitUntil(
 
       caches.keys()
-        .then(cacheNames => {
+        .then(
+          cacheNames => {
 
-          return Promise.all(
+            return Promise.all(
 
-            cacheNames
-              .filter(name => {
-                return name !== CACHE_NAME;
-              })
-              .map(name => {
-                return caches.delete(name);
-              })
+              cacheNames
+                .filter(
+                  name =>
+                    name !== CACHE_NAME
+                )
+                .map(
+                  name =>
+                    caches.delete(
+                      name
+                    )
+                )
 
-          );
+            );
 
-        })
-        .then(() => {
-          return self.clients.claim();
-        })
+          }
+        )
+        .then(
+          () => {
+
+            return self.clients.claim();
+
+          }
+        )
 
     );
 
   }
 );
+
 
 
 self.addEventListener(
@@ -67,7 +93,9 @@ self.addEventListener(
     if (
       event.request.method !== "GET"
     ) {
+
       return;
+
     }
 
 
@@ -76,56 +104,70 @@ self.addEventListener(
       caches.match(
         event.request
       )
-      .then(cached => {
-
-        if (cached) {
-          return cached;
-        }
-
-
-        return fetch(
-          event.request
-        )
-        .then(response => {
+      .then(
+        cached => {
 
           if (
-            !response ||
-            response.status !== 200 ||
-            response.type !== "basic"
+            cached
           ) {
-            return response;
+
+            return cached;
+
           }
 
 
-          const responseClone =
-            response.clone();
-
-
-          caches.open(
-            CACHE_NAME
+          return fetch(
+            event.request
           )
-          .then(cache => {
+          .then(
+            response => {
 
-            cache.put(
-              event.request,
-              responseClone
-            );
+              if (
+                !response ||
+                response.status !== 200 ||
+                response.type !== "basic"
+              ) {
 
-          });
+                return response;
+
+              }
 
 
-          return response;
+              const clone =
+                response.clone();
 
-        })
-        .catch(() => {
 
-          return caches.match(
-            "./index.html"
+              caches.open(
+                CACHE_NAME
+              )
+              .then(
+                cache => {
+
+                  cache.put(
+                    event.request,
+                    clone
+                  );
+
+                }
+              );
+
+
+              return response;
+
+            }
+          )
+          .catch(
+            () => {
+
+              return caches.match(
+                "./index.html"
+              );
+
+            }
           );
 
-        });
-
-      })
+        }
+      )
 
     );
 

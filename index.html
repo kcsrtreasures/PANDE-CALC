@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="theme-color" content="#17231d">
-  <meta name="description" content="PANDE-CALC sourdough pandesal calculator">
+  <meta
+    name="description"
+    content="PANDE-CALC sourdough pandesal recipe and batch calculator"
+  >
 
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -18,22 +21,52 @@
 <body>
 
 <header class="site-header">
+
   <div>
-    <div class="brand">PANDE<span>-</span>CALC</div>
-    <p class="brand-subtitle">Sourdough Pandesal Calculator</p>
+    <div class="brand">
+      PANDE<span>-</span>CALC
+    </div>
+
+    <p class="brand-subtitle">
+      Sourdough Pandesal Calculator
+    </p>
   </div>
 
-  <button id="resetBtn" class="text-button" type="button">
-    Reset
-  </button>
+
+  <div class="header-actions">
+
+    <button
+      id="installBtn"
+      class="install-button"
+      type="button"
+      hidden>
+      Install App
+    </button>
+
+    <button
+      id="resetBtn"
+      class="text-button"
+      type="button">
+      Reset
+    </button>
+
+  </div>
+
 </header>
 
 
 <main class="container">
 
-  <!-- INTRO -->
+
+  <!-- =====================================================
+       INTRO
+  ====================================================== -->
+
   <section class="intro">
-    <p class="eyebrow">YOUR RECIPE · YOUR BATCH · YOUR STARTER</p>
+
+    <p class="eyebrow">
+      YOUR RECIPE · YOUR BATCH · YOUR STARTER
+    </p>
 
     <h1>
       Calculate exactly what you need
@@ -45,25 +78,37 @@
       then tell PANDE-CALC how many pieces you need and
       how heavy each piece should be.
     </p>
+
   </section>
 
 
+
   <!-- =====================================================
-       01 RECIPE
+       01 FORMULA
   ====================================================== -->
+
   <section class="section-block">
 
     <div class="section-heading">
-      <div class="section-number">01</div>
+
+      <div class="section-number">
+        01
+      </div>
 
       <div>
         <h2>YOUR FORMULA</h2>
-        <p>Enter your recipe in grams or Baker's Percentage.</p>
+
+        <p>
+          Enter your recipe in grams or Baker's Percentage.
+        </p>
       </div>
+
     </div>
 
 
     <div class="panel">
+
+      <!-- INPUT MODE -->
 
       <div class="mode-switch">
 
@@ -84,38 +129,75 @@
       </div>
 
 
-      <!-- GRAMS MODE -->
+
+      <!-- =================================================
+           GRAMS MODE
+      ================================================== -->
+
       <div id="gramsMode">
 
         <div class="table-header">
-          <span>INGREDIENT</span>
-          <span>AMOUNT</span>
+
+          <span>
+            INGREDIENT
+          </span>
+
+          <span>
+            AMOUNT
+          </span>
+
           <span></span>
+
         </div>
+
 
         <div id="ingredientRows"></div>
 
-        <button id="addBtn" class="add-button" type="button">
+
+        <button
+          id="addBtn"
+          class="add-button"
+          type="button">
+
           + Add ingredient
+
         </button>
 
+
         <div class="total-row">
-          <span>Total flour</span>
-          <strong id="totalFlour">0 g</strong>
+
+          <span>
+            Total flour
+          </span>
+
+          <strong id="totalFlour">
+            0 g
+          </strong>
+
         </div>
 
       </div>
 
 
-      <!-- BAKER'S % MODE -->
+
+      <!-- =================================================
+           BAKER'S % MODE
+      ================================================== -->
+
       <div id="bakersMode" class="hidden">
 
         <div class="bakers-help">
-          <strong>How Baker's % works</strong>
+
+          <strong>
+            How Baker's % works
+          </strong>
+
           <p>
-            Flour is always 100%. Enter the percentage of each
-            ingredient relative to your total flour.
+            Flour is always the 100% reference.
+            Enter each ingredient as a percentage
+            of your total flour.
           </p>
+
         </div>
 
 
@@ -126,46 +208,80 @@
           </label>
 
           <div class="input-with-unit">
+
             <input
               id="bakersFlourWeight"
               type="number"
               min="0"
               step="any"
-              placeholder="0">
+              placeholder="3000">
 
-            <span>g</span>
+            <span>
+              g
+            </span>
+
           </div>
 
           <small>
-            This is the actual flour weight you want to use.
+            The actual amount of flour for this formula.
           </small>
 
         </div>
 
 
         <div class="table-header baker-header">
-          <span>INGREDIENT</span>
-          <span>BAKER'S %</span>
+
+          <span>
+            INGREDIENT
+          </span>
+
+          <span>
+            BAKER'S %
+          </span>
+
           <span></span>
+
         </div>
+
 
         <div id="bakerRows"></div>
 
-        <button id="addBakerBtn" class="add-button" type="button">
+
+        <button
+          id="addBakerBtn"
+          class="add-button"
+          type="button">
+
           + Add ingredient
+
         </button>
 
 
         <div class="bakers-summary">
 
           <div>
-            <span>Total flour</span>
-            <strong id="bakerTotalFlour">0 g</strong>
+
+            <span>
+              Total flour
+            </span>
+
+            <strong id="bakerTotalFlour">
+              0 g
+            </strong>
+
           </div>
 
+
           <div>
-            <span>Formula total</span>
-            <strong id="formulaTotalPercent">100%</strong>
+
+            <span>
+              Formula total
+            </span>
+
+            <strong id="formulaTotalPercent">
+              0%
+            </strong>
+
           </div>
 
         </div>
@@ -173,6 +289,7 @@
       </div>
 
     </div>
+
   </section>
 
 
@@ -180,21 +297,36 @@
   <!-- =====================================================
        02 BATCH SIZE
   ====================================================== -->
+
   <section class="section-block">
 
     <div class="section-heading">
-      <div class="section-number">02</div>
+
+      <div class="section-number">
+        02
+      </div>
 
       <div>
-        <h2>BATCH SIZE</h2>
-        <p>Tell PANDE-CALC what your customer ordered.</p>
+
+        <h2>
+          BATCH SIZE
+        </h2>
+
+        <p>
+          Tell PANDE-CALC what your customer ordered.
+        </p>
+
       </div>
+
     </div>
 
 
     <div class="panel">
 
       <div class="batch-grid">
+
+
+        <!-- PIECES -->
 
         <div class="field-card">
 
@@ -216,6 +348,8 @@
         </div>
 
 
+        <!-- PIECE WEIGHT -->
+
         <div class="field-card">
 
           <label for="pieceWeight">
@@ -231,7 +365,9 @@
               step="any"
               placeholder="55">
 
-            <span>g</span>
+            <span>
+              g
+            </span>
 
           </div>
 
@@ -241,6 +377,8 @@
 
         </div>
 
+
+        <!-- ALLOWANCE -->
 
         <div class="field-card">
 
@@ -258,7 +396,9 @@
               step="0.5"
               value="0">
 
-            <span>%</span>
+            <span>
+              %
+            </span>
 
           </div>
 
@@ -271,26 +411,60 @@
       </div>
 
 
+
+      <!-- BATCH SUMMARY -->
+
       <div class="production-summary">
 
         <div>
-          <span>Customer order</span>
-          <strong id="orderSummary">—</strong>
+
+          <span>
+            Customer order
+          </span>
+
+          <strong id="orderSummary">
+            —
+          </strong>
+
         </div>
 
-        <div>
-          <span>Base dough required</span>
-          <strong id="baseDoughRequired">—</strong>
-        </div>
 
         <div>
-          <span>Production allowance</span>
-          <strong id="allowanceDough">—</strong>
+
+          <span>
+            Base dough required
+          </span>
+
+          <strong id="baseDoughRequired">
+            —
+          </strong>
+
         </div>
+
+
+        <div>
+
+          <span>
+            Production allowance
+          </span>
+
+          <strong id="allowanceDough">
+            —
+          </strong>
+
+        </div>
+
 
         <div class="highlight">
-          <span>Total dough to prepare</span>
-          <strong id="totalDoughRequired">—</strong>
+
+          <span>
+            Total dough to prepare
+          </span>
+
+          <strong id="totalDoughRequired">
+            —
+          </strong>
+
         </div>
 
       </div>
@@ -304,21 +478,38 @@
   <!-- =====================================================
        03 FERMENTATION
   ====================================================== -->
+
   <section class="section-block">
 
     <div class="section-heading">
-      <div class="section-number">03</div>
+
+      <div class="section-number">
+        03
+      </div>
 
       <div>
-        <h2>FERMENTATION</h2>
-        <p>Choose your fermentation plan.</p>
+
+        <h2>
+          FERMENTATION
+        </h2>
+
+        <p>
+          Choose your fermentation plan.
+        </p>
+
       </div>
+
     </div>
 
 
     <div class="plan-grid">
 
-      <label class="plan-card selected" id="sameCard">
+
+      <!-- SAME DAY -->
+
+      <label
+        class="plan-card selected"
+        id="sameCard">
 
         <input
           type="radio"
@@ -345,7 +536,12 @@
       </label>
 
 
-      <label class="plan-card" id="overnightCard">
+
+      <!-- OVERNIGHT -->
+
+      <label
+        class="plan-card"
+        id="overnightCard">
 
         <input
           type="radio"
@@ -377,17 +573,29 @@
 
 
   <!-- =====================================================
-       04 STARTER
+       04 STARTER SETTINGS
   ====================================================== -->
+
   <section class="section-block">
 
     <div class="section-heading">
-      <div class="section-number">04</div>
+
+      <div class="section-number">
+        04
+      </div>
 
       <div>
-        <h2>STARTER SETTINGS</h2>
-        <p>Set how much fully active starter you want to use.</p>
+
+        <h2>
+          STARTER SETTINGS
+        </h2>
+
+        <p>
+          Set how much fully active starter you want to use.
+        </p>
+
       </div>
+
     </div>
 
 
@@ -396,9 +604,17 @@
       <div class="starter-setting">
 
         <div class="setting-label">
-          <span>STARTER PERCENTAGE</span>
-          <strong id="percentageValue">20%</strong>
+
+          <span>
+            STARTER PERCENTAGE
+          </span>
+
+          <strong id="percentageValue">
+            20%
+          </strong>
+
         </div>
+
 
         <input
           id="starterPercentage"
@@ -408,9 +624,17 @@
           step="1"
           value="20">
 
+
         <div class="slider-labels">
-          <span>5%</span>
-          <span>50%</span>
+
+          <span>
+            5%
+          </span>
+
+          <span>
+            50%
+          </span>
+
         </div>
 
       </div>
@@ -422,19 +646,34 @@
 
 
   <!-- =====================================================
-       05 RESULTS
+       05 RESULT
   ====================================================== -->
+
   <section class="section-block">
 
     <div class="section-heading">
-      <div class="section-number">05</div>
+
+      <div class="section-number">
+        05
+      </div>
 
       <div>
-        <h2>YOUR RESULT</h2>
-        <p>Your scaled production formula.</p>
+
+        <h2>
+          YOUR RESULT
+        </h2>
+
+        <p>
+          Your scaled production formula.
+        </p>
+
       </div>
+
     </div>
 
+
+
+    <!-- STARTER RESULT -->
 
     <div class="result-card">
 
@@ -444,9 +683,15 @@
           FULLY ACTIVE SOURDOUGH STARTER
         </p>
 
-        <div id="starterResult" class="starter-result">
+
+        <div
+          id="starterResult"
+          class="starter-result">
+
           — <small>g</small>
+
         </div>
+
 
         <p id="resultDescription">
           Enter your recipe and batch size to calculate.
@@ -455,26 +700,58 @@
       </div>
 
 
+
       <div class="result-details">
 
         <div>
-          <span>Total flour</span>
-          <strong id="resultFlour">—</strong>
+
+          <span>
+            Total flour
+          </span>
+
+          <strong id="resultFlour">
+            —
+          </strong>
+
         </div>
 
-        <div>
-          <span>Total dough</span>
-          <strong id="resultDough">—</strong>
-        </div>
 
         <div>
-          <span>Pieces</span>
-          <strong id="resultPieces">—</strong>
+
+          <span>
+            Total dough
+          </span>
+
+          <strong id="resultDough">
+            —
+          </strong>
+
         </div>
 
+
         <div>
-          <span>Piece weight</span>
-          <strong id="resultPieceWeight">—</strong>
+
+          <span>
+            Pieces
+          </span>
+
+          <strong id="resultPieces">
+            —
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Piece weight
+          </span>
+
+          <strong id="resultPieceWeight">
+            —
+          </strong>
+
         </div>
 
       </div>
@@ -482,34 +759,71 @@
     </div>
 
 
-    <!-- SCALED INGREDIENTS -->
+
+    <!-- =================================================
+         SCALED INGREDIENTS
+    ================================================== -->
+
     <div class="panel ingredient-result-panel">
 
       <div class="result-table-title">
+
         <div>
-          <p class="eyebrow">PRODUCTION FORMULA</p>
-          <h3>Ingredients to weigh</h3>
+
+          <p class="eyebrow">
+            PRODUCTION FORMULA
+          </p>
+
+          <h3>
+            Ingredients to weigh
+          </h3>
+
         </div>
 
-        <div id="resultModeLabel" class="mode-label">
+
+        <div
+          id="resultModeLabel"
+          class="mode-label">
+
           —
+
         </div>
+
       </div>
 
 
       <div class="scaled-table">
 
         <div class="scaled-header">
-          <span>INGREDIENT</span>
-          <span>BAKER'S %</span>
-          <span>WEIGHT</span>
+
+          <span>
+            INGREDIENT
+          </span>
+
+          <span>
+            BAKER'S %
+          </span>
+
+          <span>
+            WEIGHT
+          </span>
+
         </div>
+
 
         <div id="scaledIngredientRows"></div>
 
+
         <div class="scaled-total">
-          <span>Total dough</span>
-          <strong id="scaledTotal">—</strong>
+
+          <span>
+            Total dough
+          </span>
+
+          <strong id="scaledTotal">
+            —
+          </strong>
+
         </div>
 
       </div>
@@ -520,14 +834,61 @@
 
 
 
-  <!-- EXPLANATION -->
-  <section class="info-box">
+  <!-- =====================================================
+       INSTALL / OFFLINE INFO
+  ====================================================== -->
 
-    <div class="info-icon">i</div>
+  <section class="install-info">
+
+    <div class="install-info-icon">
+      ⇩
+    </div>
 
     <div>
 
-      <h3>How PANDE-CALC works</h3>
+      <h3>
+        Use PANDE-CALC offline
+      </h3>
+
+      <p id="installMessage">
+        Once installed, PANDE-CALC can be used without an
+        internet connection. Your recipe quantities are saved
+        locally on this device.
+      </p>
+
+      <div class="ios-note">
+
+        <strong>
+          iPhone / iPad:
+        </strong>
+
+        Open PANDE-CALC in Safari, tap
+        <strong>Share</strong>, then choose
+        <strong>Add to Home Screen</strong>.
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       EXPLANATION
+  ====================================================== -->
+
+  <section class="info-box">
+
+    <div class="info-icon">
+      i
+    </div>
+
+    <div>
+
+      <h3>
+        How PANDE-CALC works
+      </h3>
 
       <p id="calculationText">
         Enter your recipe and batch size.
@@ -543,16 +904,28 @@
 
   </section>
 
-
 </main>
 
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
 
 <footer class="site-footer">
 
   <div>
-    <strong>PANDE-CALC</strong>
-    <span>Local recipe calculator</span>
+
+    <strong>
+      PANDE-CALC
+    </strong>
+
+    <span>
+      Local recipe calculator
+    </span>
+
   </div>
+
 
   <div id="offlineStatus">
     Offline-ready

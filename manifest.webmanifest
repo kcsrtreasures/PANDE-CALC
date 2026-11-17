@@ -3,6 +3,7 @@
   "short_name": "PANDE-CALC",
   "description": "Sourdough pandesal recipe and batch calculator",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#17231d",
   "theme_color": "#17231d",
