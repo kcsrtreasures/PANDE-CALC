@@ -17,6 +17,7 @@ const DEFAULT_INGREDIENTS = [
 const STORAGE_KEY = "pandeCalc.recipe.v1";
 const LEAVENING_STORAGE_KEY = "pandeCalc.leavening.v1";
 const INSTANT_YEAST_GRAMS_PER_TSP = 3.1;
+const ACTIVE_DRY_YEAST_GRAMS_PER_TSP = 3.3;
 
 const DEFAULT_LEAVENING_SETTINGS = {
   method: "sourdough",
@@ -107,30 +108,29 @@ function loadLeaveningSettings() {
     if (!saved) return defaults;
 
     const parsed = JSON.parse(saved);
-    const oldMethod = parsed.method;
-    const method = ["instant", "sourdough", "activeDry"].includes(oldMethod) ? oldMethod : defaults.method;
+    const method = ["sourdough", "instant", "activeDry"].includes(parsed.method)
+      ? parsed.method : defaults.method;
 
     const planPercent = (source, fallback) => ({
       same: Number.isFinite(Number(source?.same)) && Number(source.same) >= 0 ? Number(source.same) : fallback.same,
       overnight: Number.isFinite(Number(source?.overnight)) && Number(source.overnight) >= 0 ? Number(source.overnight) : fallback.overnight
     });
+    const validGrams = (value) => Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0;
 
-    const legacyInstantPercent = parsed.instantYeastPercent;
-    const migratedPercent = planPercent(legacyInstantPercent, defaults.instantYeastPercent);
-
+    // Preserve existing instant-yeast settings and migrate older activeDry
+    // records without silently changing the selected method.
+    const oldActiveDry = parsed.method === "activeDry";
     return {
       method,
       starterPercent: planPercent(parsed.starterPercent, defaults.starterPercent),
-      instantYeastPercent: migratedPercent,
-      instantYeastGrams: Number.isFinite(Number(parsed.instantYeastGrams)) && Number(parsed.instantYeastGrams) >= 0
-        ? Number(parsed.instantYeastGrams)
-        : 0,
+      instantYeastPercent: planPercent(parsed.instantYeastPercent, defaults.instantYeastPercent),
+      instantYeastGrams: validGrams(parsed.instantYeastGrams),
       instantInputMode: parsed.instantInputMode === "automatic" ? "automatic" : "manual",
       instantUnit: parsed.instantUnit === "tsp" ? "tsp" : "g",
-      activeDryYeastPercent: planPercent(parsed.activeDryYeastPercent, defaults.activeDryYeastPercent),
-      activeDryYeastGrams: Math.max(0, Number(parsed.activeDryYeastGrams) || 0),
-      activeDryInputMode: parsed.activeDryInputMode === "automatic" ? "automatic" : "manual",
-      activeDryUnit: parsed.activeDryUnit === "tsp" ? "tsp" : "g"
+      activeDryYeastPercent: planPercent(parsed.activeDryYeastPercent, oldActiveDry && parsed.instantYeastPercent ? parsed.instantYeastPercent : defaults.activeDryYeastPercent),
+      activeDryYeastGrams: validGrams(parsed.activeDryYeastGrams ?? (oldActiveDry ? parsed.instantYeastGrams : 0)),
+      activeDryInputMode: parsed.activeDryInputMode === "automatic" || (oldActiveDry && parsed.instantInputMode === "automatic") ? "automatic" : "manual",
+      activeDryUnit: (parsed.activeDryUnit ?? (oldActiveDry ? parsed.instantUnit : "g")) === "tsp" ? "tsp" : "g"
     };
   } catch (error) {
     console.warn("Could not load saved leavening settings.", error);
@@ -166,27 +166,54 @@ function getCurrentStarterPercent() {
   return positiveNumber(leaveningSettings.starterPercent[currentPlan]);
 }
 
+function isActiveDrySelected() {
+  return leaveningSettings.method === "activeDry";
+}
+
+function getCurrentYeastSettings() {
+  return isActiveDrySelected()
+    ? {
+        percent: leaveningSettings.activeDryYeastPercent,
+        grams: leaveningSettings.activeDryYeastGrams,
+        mode: leaveningSettings.activeDryInputMode,
+        unit: leaveningSettings.activeDryUnit,
+        name: "Active dry yeast",
+        label: "ACTIVE DRY YEAST",
+        gramsPerTsp: ACTIVE_DRY_YEAST_GRAMS_PER_TSP
+      }
+    : {
+        percent: leaveningSettings.instantYeastPercent,
+        grams: leaveningSettings.instantYeastGrams,
+        mode: leaveningSettings.instantInputMode,
+        unit: leaveningSettings.instantUnit,
+        name: "Instant yeast",
+        label: "INSTANT YEAST",
+        gramsPerTsp: INSTANT_YEAST_GRAMS_PER_TSP
+      };
+}
+
+function setCurrentYeastSetting(key, value) {
+  const prefix = isActiveDrySelected() ? "activeDry" : "instant";
+  const keys = {
+    percent: `${prefix}YeastPercent`,
+    grams: `${prefix}YeastGrams`,
+    mode: `${prefix}InputMode`,
+    unit: `${prefix}Unit`
+  };
+  leaveningSettings[keys[key]] = value;
+}
+
 function getCurrentInstantYeastPercent() {
-  const key = leaveningSettings.method === "activeDry" ? "activeDryYeastPercent" : "instantYeastPercent";
-  return positiveNumber(leaveningSettings[key][currentPlan]);
+  return positiveNumber(getCurrentYeastSettings().percent[currentPlan]);
 }
-function getCurrentYeastMode() {
-  return leaveningSettings.method === "activeDry" ? leaveningSettings.activeDryInputMode : leaveningSettings.instantInputMode;
-}
-function getCurrentYeastUnit() {
-  return leaveningSettings.method === "activeDry" ? leaveningSettings.activeDryUnit : leaveningSettings.instantUnit;
-}
-function getCurrentYeastGrams() {
-  return leaveningSettings.method === "activeDry" ? leaveningSettings.activeDryYeastGrams : leaveningSettings.instantYeastGrams;
-}
-function yeastName() { return leaveningSettings.method === "activeDry" ? "Active dry yeast" : "Instant yeast"; }
 
 function getInstantYeastDisplayAmount() {
-  return getCurrentYeastUnit() === "tsp" ? getCurrentYeastGrams() / INSTANT_YEAST_GRAMS_PER_TSP : getCurrentYeastGrams();
+  const settings = getCurrentYeastSettings();
+  return settings.unit === "tsp" ? settings.grams / settings.gramsPerTsp : settings.grams;
 }
 
 function formatInstantAmount(value) {
-  return formatNumber(value, getCurrentYeastUnit() === "tsp" ? 2 : 1);
+  return formatNumber(value, getCurrentYeastSettings().unit === "tsp" ? 2 : 1);
 }
 
 /* =========================================================
@@ -380,12 +407,13 @@ function updatePlanCards() {
     overnightPercentage.textContent = `${formatNumber(leaveningSettings.starterPercent.overnight)}%`;
     sameDescription.textContent = "Starter percentage · suggested starting point";
     overnightDescription.textContent = "Starter percentage · suggested starting point";
-  } else if (getCurrentYeastMode() === "automatic") {
-    const percentages = leaveningSettings.method === "activeDry" ? leaveningSettings.activeDryYeastPercent : leaveningSettings.instantYeastPercent;
-    samePercentage.textContent = `${formatNumber(percentages.same, 3)}%`;
-    overnightPercentage.textContent = `${formatNumber(percentages.overnight, 3)}%`;
-    sameDescription.textContent = `${yeastName()} · suggested starting point`;
-    overnightDescription.textContent = `${yeastName()} · suggested starting point`;
+  } else if (getCurrentYeastSettings().mode === "automatic") {
+    const yeast = getCurrentYeastSettings();
+    samePercentage.textContent = `${formatNumber(yeast.percent.same, 3)}%`;
+    overnightPercentage.textContent = `${formatNumber(yeast.percent.overnight, 3)}%`;
+    const yeastName = yeast.name;
+    sameDescription.textContent = `${yeastName} · suggested starting point`;
+    overnightDescription.textContent = `${yeastName} · suggested starting point`;
   } else {
     samePercentage.textContent = "Manual amount";
     overnightPercentage.textContent = "Manual amount";
@@ -395,38 +423,46 @@ function updatePlanCards() {
 }
 
 function syncLeaveningControls() {
+  const yeast = getCurrentYeastSettings();
+  const activeDry = isActiveDrySelected();
+
   leaveningMethod.value = leaveningSettings.method;
   percentageSlider.value = String(leaveningSettings.starterPercent[currentPlan]);
   percentageValue.textContent = `${formatNumber(leaveningSettings.starterPercent[currentPlan])}%`;
 
-  instantInputMode.value = getCurrentYeastMode();
-  instantUnit.value = getCurrentYeastUnit();
-  instantManualUnit.textContent = getCurrentYeastUnit();
+  instantInputMode.value = yeast.mode;
+  instantUnit.value = yeast.unit;
+  instantManualUnit.textContent = yeast.unit;
 
   const displayAmount = getInstantYeastDisplayAmount();
   instantManualAmount.value = displayAmount === 0 ? "" : String(Number(displayAmount.toFixed(4)));
 
-  const equivalentGrams = getCurrentYeastUnit() === "tsp"
-    ? displayAmount * INSTANT_YEAST_GRAMS_PER_TSP
-    : displayAmount;
-  const equivalentTsp = equivalentGrams / INSTANT_YEAST_GRAMS_PER_TSP;
+  const equivalentGrams = yeast.unit === "tsp" ? displayAmount * yeast.gramsPerTsp : displayAmount;
+  const equivalentTsp = equivalentGrams / yeast.gramsPerTsp;
   instantEquivalent.textContent = `Equivalent: ${formatNumber(equivalentGrams, 2)} g · about ${formatNumber(equivalentTsp, 2)} tsp`;
 
-  instantPercentage.value = String(getCurrentInstantYeastPercent());
-  instantPercentageValue.textContent = `${formatNumber(getCurrentInstantYeastPercent(), 3)}%`;
+  instantPercentage.value = String(yeast.percent[currentPlan]);
+  instantPercentageValue.textContent = `${formatNumber(yeast.percent[currentPlan], 3)}%`;
 
-  const isManual = getCurrentYeastMode() === "manual";
+  const isManual = yeast.mode === "manual";
   instantManualSettings.classList.toggle("hidden", !isManual);
   instantAutomaticSettings.classList.toggle("hidden", isManual);
   instantUnitCard.classList.toggle("hidden", !isManual);
 
+  // Both yeast types intentionally share the same controls panel.
+  // The panel must be visible for either yeast selection.
   starterSettingsPanel.classList.toggle("hidden", leaveningSettings.method !== "sourdough");
   instantSettingsPanel.classList.toggle("hidden", !["instant", "activeDry"].includes(leaveningSettings.method));
-  document.querySelector("label[for='instantManualAmount']").textContent = `${yeastName().toUpperCase()} FOR YOUR BASE RECIPE`;
-  document.querySelector("label[for='instantPercentage']").textContent = `${yeastName().toUpperCase()} PERCENTAGE`;
+
+  const methodLabel = activeDry ? "ACTIVE DRY YEAST" : "INSTANT YEAST";
+  const amountLabel = document.querySelector('label[for="instantManualAmount"]');
+  if (amountLabel) amountLabel.textContent = `${methodLabel} FOR YOUR BASE RECIPE`;
+  const help = instantManualSettings.querySelector("small");
+  if (help) help.textContent = `Enter the amount of ${yeast.name.toLowerCase()} used in the recipe you entered above. PANDE-CALC scales it with your batch.`;
 
   updatePlanCards();
 }
+
 function setLeaveningMethod(method) {
   if (!["sourdough", "instant", "activeDry"].includes(method)) return;
   leaveningSettings.method = method;
@@ -447,7 +483,7 @@ percentageSlider.addEventListener("input", () => {
 
 instantPercentage.addEventListener("input", () => {
   const value = Math.min(3, positiveNumber(instantPercentage.value));
-  leaveningSettings[leaveningSettings.method === "activeDry" ? "activeDryYeastPercent" : "instantYeastPercent"][currentPlan] = value;
+  getCurrentYeastSettings().percent[currentPlan] = value;
   saveLeaveningSettings();
   instantPercentageValue.textContent = `${formatNumber(value, 3)}%`;
   updatePlanCards();
@@ -455,14 +491,14 @@ instantPercentage.addEventListener("input", () => {
 });
 
 instantInputMode.addEventListener("change", () => {
-  leaveningSettings[leaveningSettings.method === "activeDry" ? "activeDryInputMode" : "instantInputMode"] = instantInputMode.value === "automatic" ? "automatic" : "manual";
+  setCurrentYeastSetting("mode", instantInputMode.value === "automatic" ? "automatic" : "manual");
   saveLeaveningSettings();
   syncLeaveningControls();
   calculate();
 });
 
 instantUnit.addEventListener("change", () => {
-  leaveningSettings[leaveningSettings.method === "activeDry" ? "activeDryUnit" : "instantUnit"] = instantUnit.value === "tsp" ? "tsp" : "g";
+  setCurrentYeastSetting("unit", instantUnit.value === "tsp" ? "tsp" : "g");
   saveLeaveningSettings();
   syncLeaveningControls();
   calculate();
@@ -470,11 +506,15 @@ instantUnit.addEventListener("change", () => {
 
 function updateInstantYeastFromDisplay(value) {
   const displayValue = positiveNumber(value);
-  leaveningSettings[leaveningSettings.method === "activeDry" ? "activeDryYeastGrams" : "instantYeastGrams"] = getCurrentYeastUnit() === "tsp" ? displayValue * INSTANT_YEAST_GRAMS_PER_TSP : displayValue;
+  const yeast = getCurrentYeastSettings();
+  setCurrentYeastSetting("grams", yeast.unit === "tsp"
+    ? displayValue * yeast.gramsPerTsp
+    : displayValue);
   saveLeaveningSettings();
 
-  const equivalentGrams = getCurrentYeastGrams();
-  const equivalentTsp = equivalentGrams / INSTANT_YEAST_GRAMS_PER_TSP;
+  const updatedYeast = getCurrentYeastSettings();
+  const equivalentGrams = updatedYeast.grams;
+  const equivalentTsp = equivalentGrams / updatedYeast.gramsPerTsp;
   instantEquivalent.textContent = `Equivalent: ${formatNumber(equivalentGrams, 2)} g · about ${formatNumber(equivalentTsp, 2)} tsp`;
   updatePlanCards();
   calculate();
@@ -503,28 +543,27 @@ function getBaseLeavener(flourWeight) {
     };
   }
 
-  if (getCurrentYeastMode() === "automatic") {
+  const yeast = getCurrentYeastSettings();
+  if (yeast.mode === "automatic") {
     const percent = getCurrentInstantYeastPercent();
-    const name = yeastName();
     return {
       grams: flourWeight * percent / 100,
       percent,
-      name,
-      label: name.toUpperCase(),
-      description: `${name} calculated at ${formatNumber(percent, 3)}% of total flour.`,
+      name: yeast.name,
+      label: yeast.label,
+      description: `${yeast.name} calculated at ${formatNumber(percent, 3)}% of total flour.`,
       tablePercent: `${formatNumber(percent, 3)}%`
     };
   }
 
-  const grams = getCurrentYeastGrams();
-  const name = yeastName();
+  const grams = yeast.grams;
   const percent = flourWeight > 0 ? grams / flourWeight * 100 : 0;
   return {
     grams,
     percent,
-    name,
-    label: name.toUpperCase(),
-    description: `${name} scaled proportionally from the amount entered for your base recipe.`,
+    name: yeast.name,
+    label: yeast.label,
+    description: `${yeast.name} scaled proportionally from the amount entered for your base recipe.`,
     tablePercent: `${formatNumber(percent, 3)}%`
   };
 }
@@ -613,7 +652,7 @@ function updateStarterResult(result) {
 
   let description = result.leavenerDescription;
   if (["instant", "activeDry"].includes(leaveningSettings.method)) {
-    const teaspoons = result.leavener / INSTANT_YEAST_GRAMS_PER_TSP;
+    const teaspoons = result.leavener / getCurrentYeastSettings().gramsPerTsp;
     description += ` Approximately ${formatNumber(teaspoons, 2)} tsp.`;
   }
   document.getElementById("resultDescription").textContent = description;
