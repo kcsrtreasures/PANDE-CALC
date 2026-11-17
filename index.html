@@ -7,11 +7,12 @@
   <meta name="theme-color" content="#17231d">
   <meta
     name="description"
-    content="PANDE-CALC sourdough pandesal recipe and batch calculator"
+    content="PANDE-CALC pandesal recipe and batch calculator"
   >
 
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
   <title>PANDE-CALC</title>
 
@@ -28,7 +29,7 @@
     </div>
 
     <p class="brand-subtitle">
-      Sourdough Pandesal Calculator
+      Pandesal Recipe &amp; Batch Calculator
     </p>
   </div>
 
@@ -65,7 +66,7 @@
   <section class="intro">
 
     <p class="eyebrow">
-      YOUR RECIPE · YOUR BATCH · YOUR STARTER
+      YOUR RECIPE · YOUR BATCH · YOUR LEAVENER
     </p>
 
     <h1>
@@ -74,9 +75,9 @@
     </h1>
 
     <p class="intro-text">
-      Enter your recipe, choose your fermentation method,
-      then tell PANDE-CALC how many pieces you need and
-      how heavy each piece should be.
+      Enter your recipe, choose your fermentation plan and
+      leavening method, then tell PANDE-CALC how many pieces
+      you need and how heavy each piece should be.
     </p>
 
   </section>
@@ -138,14 +139,8 @@
 
         <div class="table-header">
 
-          <span>
-            INGREDIENT
-          </span>
-
-          <span>
-            AMOUNT
-          </span>
-
+          <span>INGREDIENT</span>
+          <span>AMOUNT (g)</span>
           <span></span>
 
         </div>
@@ -158,21 +153,15 @@
           id="addBtn"
           class="add-button"
           type="button">
-
           + Add ingredient
-
         </button>
 
 
         <div class="total-row">
 
-          <span>
-            Total flour
-          </span>
+          <span>Total flour</span>
 
-          <strong id="totalFlour">
-            0 g
-          </strong>
+          <strong id="totalFlour">0 g</strong>
 
         </div>
 
@@ -188,9 +177,7 @@
 
         <div class="bakers-help">
 
-          <strong>
-            How Baker's % works
-          </strong>
+          <strong>How Baker's % works</strong>
 
           <p>
             Flour is always the 100% reference.
@@ -203,9 +190,7 @@
 
         <div class="flour-weight-box">
 
-          <label for="bakersFlourWeight">
-            TOTAL FLOUR WEIGHT
-          </label>
+          <label for="bakersFlourWeight">TOTAL FLOUR WEIGHT</label>
 
           <div class="input-with-unit">
 
@@ -216,9 +201,7 @@
               step="any"
               placeholder="3000">
 
-            <span>
-              g
-            </span>
+            <span>g</span>
 
           </div>
 
@@ -231,14 +214,8 @@
 
         <div class="table-header baker-header">
 
-          <span>
-            INGREDIENT
-          </span>
-
-          <span>
-            BAKER'S %
-          </span>
-
+          <span>INGREDIENT</span>
+          <span>BAKER'S %</span>
           <span></span>
 
         </div>
@@ -251,37 +228,20 @@
           id="addBakerBtn"
           class="add-button"
           type="button">
-
           + Add ingredient
-
         </button>
 
 
         <div class="bakers-summary">
 
           <div>
-
-            <span>
-              Total flour
-            </span>
-
-            <strong id="bakerTotalFlour">
-              0 g
-            </strong>
-
+            <span>Total flour</span>
+            <strong id="bakerTotalFlour">0 g</strong>
           </div>
 
-
           <div>
-
-            <span>
-              Formula total
-            </span>
-
-            <strong id="formulaTotalPercent">
-              0%
-            </strong>
-
+            <span>Formula total</span>
+            <strong id="formulaTotalPercent">0%</strong>
           </div>
 
         </div>
@@ -302,20 +262,11 @@
 
     <div class="section-heading">
 
-      <div class="section-number">
-        02
-      </div>
+      <div class="section-number">02</div>
 
       <div>
-
-        <h2>
-          BATCH SIZE
-        </h2>
-
-        <p>
-          Tell PANDE-CALC what your customer ordered.
-        </p>
-
+        <h2>BATCH SIZE</h2>
+        <p>Tell PANDE-CALC what your customer ordered.</p>
       </div>
 
     </div>
@@ -325,69 +276,36 @@
 
       <div class="batch-grid">
 
-
-        <!-- PIECES -->
-
         <div class="field-card">
-
-          <label for="pieceCount">
-            NUMBER OF PIECES
-          </label>
-
+          <label for="pieceCount">NUMBER OF PIECES</label>
           <input
             id="pieceCount"
             type="number"
             min="1"
             step="1"
             placeholder="150">
-
-          <small>
-            How many pandesal pieces do you need?
-          </small>
-
+          <small>How many pandesal pieces do you need?</small>
         </div>
 
 
-        <!-- PIECE WEIGHT -->
-
         <div class="field-card">
-
-          <label for="pieceWeight">
-            WEIGHT PER PIECE
-          </label>
-
+          <label for="pieceWeight">WEIGHT PER PIECE</label>
           <div class="input-with-unit">
-
             <input
               id="pieceWeight"
               type="number"
               min="0"
               step="any"
               placeholder="55">
-
-            <span>
-              g
-            </span>
-
+            <span>g</span>
           </div>
-
-          <small>
-            Target dough weight before baking.
-          </small>
-
+          <small>Target dough weight before baking.</small>
         </div>
 
 
-        <!-- ALLOWANCE -->
-
         <div class="field-card">
-
-          <label for="wastagePercent">
-            PRODUCTION ALLOWANCE
-          </label>
-
+          <label for="wastagePercent">PRODUCTION ALLOWANCE</label>
           <div class="input-with-unit">
-
             <input
               id="wastagePercent"
               type="number"
@@ -395,76 +313,34 @@
               max="50"
               step="0.5"
               value="0">
-
-            <span>
-              %
-            </span>
-
+            <span>%</span>
           </div>
-
-          <small>
-            Optional allowance for dough loss and rounding.
-          </small>
-
+          <small>Optional allowance for dough loss and rounding.</small>
         </div>
 
       </div>
 
 
-
-      <!-- BATCH SUMMARY -->
-
       <div class="production-summary">
 
         <div>
-
-          <span>
-            Customer order
-          </span>
-
-          <strong id="orderSummary">
-            —
-          </strong>
-
+          <span>Customer order</span>
+          <strong id="orderSummary">—</strong>
         </div>
-
 
         <div>
-
-          <span>
-            Base dough required
-          </span>
-
-          <strong id="baseDoughRequired">
-            —
-          </strong>
-
+          <span>Base dough required</span>
+          <strong id="baseDoughRequired">—</strong>
         </div>
-
 
         <div>
-
-          <span>
-            Production allowance
-          </span>
-
-          <strong id="allowanceDough">
-            —
-          </strong>
-
+          <span>Production allowance</span>
+          <strong id="allowanceDough">—</strong>
         </div>
-
 
         <div class="highlight">
-
-          <span>
-            Total dough to prepare
-          </span>
-
-          <strong id="totalDoughRequired">
-            —
-          </strong>
-
+          <span>Total dough to prepare</span>
+          <strong id="totalDoughRequired">—</strong>
         </div>
 
       </div>
@@ -483,20 +359,11 @@
 
     <div class="section-heading">
 
-      <div class="section-number">
-        03
-      </div>
+      <div class="section-number">03</div>
 
       <div>
-
-        <h2>
-          FERMENTATION
-        </h2>
-
-        <p>
-          Choose your fermentation plan.
-        </p>
-
+        <h2>FERMENTATION</h2>
+        <p>Choose your fermentation plan.</p>
       </div>
 
     </div>
@@ -504,66 +371,23 @@
 
     <div class="plan-grid">
 
-
-      <!-- SAME DAY -->
-
-      <label
-        class="plan-card selected"
-        id="sameCard">
-
-        <input
-          type="radio"
-          name="plan"
-          value="same"
-          checked>
-
+      <label class="plan-card selected" id="sameCard">
+        <input type="radio" name="plan" value="same" checked>
         <div class="plan-content">
-
-          <div class="plan-title">
-            Same-day
-          </div>
-
-          <div class="plan-percentage">
-            20%
-          </div>
-
-          <p>
-            Suggested starter percentage
-          </p>
-
+          <div class="plan-title">Same-day</div>
+          <div class="plan-percentage" id="samePlanPercentage">20%</div>
+          <p id="samePlanDescription">Suggested starter percentage</p>
         </div>
-
       </label>
 
 
-
-      <!-- OVERNIGHT -->
-
-      <label
-        class="plan-card"
-        id="overnightCard">
-
-        <input
-          type="radio"
-          name="plan"
-          value="overnight">
-
+      <label class="plan-card" id="overnightCard">
+        <input type="radio" name="plan" value="overnight">
         <div class="plan-content">
-
-          <div class="plan-title">
-            Overnight refrigerated
-          </div>
-
-          <div class="plan-percentage">
-            10%
-          </div>
-
-          <p>
-            Suggested starter percentage
-          </p>
-
+          <div class="plan-title">Overnight refrigerated</div>
+          <div class="plan-percentage" id="overnightPlanPercentage">10%</div>
+          <p id="overnightPlanDescription">Suggested starter percentage</p>
         </div>
-
       </label>
 
     </div>
@@ -573,27 +397,18 @@
 
 
   <!-- =====================================================
-       04 STARTER SETTINGS
+       04 LEAVENING SETTINGS
   ====================================================== -->
 
   <section class="section-block">
 
     <div class="section-heading">
 
-      <div class="section-number">
-        04
-      </div>
+      <div class="section-number">04</div>
 
       <div>
-
-        <h2>
-          STARTER SETTINGS
-        </h2>
-
-        <p>
-          Set how much fully active starter you want to use.
-        </p>
-
+        <h2>LEAVENING SETTINGS</h2>
+        <p>Choose the leavener for this batch and set its amount.</p>
       </div>
 
     </div>
@@ -601,20 +416,25 @@
 
     <div class="panel starter-panel">
 
-      <div class="starter-setting">
+      <div class="field-card method-card">
+        <label for="leaveningMethod">LEAVENING METHOD</label>
+        <select id="leaveningMethod" class="setting-select">
+          <option value="sourdough">Fully active sourdough starter</option>
+          <option value="instant">Instant yeast</option>
+          <option value="activeDry">Active dry yeast</option>
+                  </select>
+        <small>
+          The selected leavener is included in the final dough target.
+        </small>
+      </div>
 
+
+      <!-- SOURDOUGH SETTINGS -->
+      <div id="starterSettings" class="leavener-settings">
         <div class="setting-label">
-
-          <span>
-            STARTER PERCENTAGE
-          </span>
-
-          <strong id="percentageValue">
-            20%
-          </strong>
-
+          <span>STARTER PERCENTAGE</span>
+          <strong id="percentageValue">20%</strong>
         </div>
-
 
         <input
           id="starterPercentage"
@@ -624,21 +444,73 @@
           step="1"
           value="20">
 
-
         <div class="slider-labels">
-
-          <span>
-            5%
-          </span>
-
-          <span>
-            50%
-          </span>
-
+          <span>5%</span>
+          <span>50%</span>
         </div>
 
+        <p class="setting-note">
+          Percentage is based on total flour. Same-day and overnight settings are saved separately.
+        </p>
       </div>
 
+
+      <!-- INSTANT YEAST SETTINGS -->
+      <div id="instantSettings" class="leavener-settings hidden">
+        <div class="settings-grid">
+          <div class="field-card">
+            <label for="instantInputMode">HOW TO SET THE AMOUNT</label>
+            <select id="instantInputMode" class="setting-select">
+              <option value="manual">Manual input</option>
+              <option value="automatic">Automatic calculation</option>
+            </select>
+            <small>Choose whether to enter your recipe's yeast amount or calculate it from flour weight.</small>
+          </div>
+
+          <div id="instantUnitCard" class="field-card">
+            <label for="instantUnit">UNIT FOR MANUAL INPUT</label>
+            <select id="instantUnit" class="setting-select">
+              <option value="g">Grams (g)</option>
+              <option value="tsp">Teaspoons (tsp)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="instantManualSettings" class="field-card instant-amount-card">
+          <label for="instantManualAmount">YEAST FOR YOUR BASE RECIPE</label>
+          <div class="input-with-unit">
+            <input
+              id="instantManualAmount"
+              type="number"
+              min="0"
+              step="any"
+              placeholder="0">
+            <span id="instantManualUnit">g</span>
+          </div>
+          <small>Enter the amount of instant yeast used in the recipe you entered above. PANDE-CALC scales it with your batch.</small>
+          <p id="instantEquivalent" class="setting-note">Equivalent: 0 g</p>
+        </div>
+
+        <div id="instantAutomaticSettings" class="field-card instant-amount-card hidden">
+          <div class="setting-label">
+            <span>YEAST PERCENTAGE</span>
+            <strong id="instantPercentageValue">1.25%</strong>
+          </div>
+          <div class="input-with-unit percent-input-wrap">
+            <input
+              id="instantPercentage"
+              type="number"
+              min="0"
+              max="3"
+              step="0.025"
+              value="1.25">
+            <span>%</span>
+          </div>
+          <p class="setting-note">
+            Suggested starting points: instant yeast 1.25% / 0.30%; active dry yeast 1.55% / 0.38% for same-day / overnight. Based on total flour; editable and saved separately.
+          </p>
+        </div>
+      </div>
     </div>
 
   </section>
@@ -653,45 +525,27 @@
 
     <div class="section-heading">
 
-      <div class="section-number">
-        05
-      </div>
+      <div class="section-number">05</div>
 
       <div>
-
-        <h2>
-          YOUR RESULT
-        </h2>
-
-        <p>
-          Your scaled production formula.
-        </p>
-
+        <h2>YOUR RESULT</h2>
+        <p>Your scaled production formula.</p>
       </div>
 
     </div>
 
 
-
-    <!-- STARTER RESULT -->
-
     <div class="result-card">
 
       <div class="result-main">
 
-        <p class="result-label">
+        <p class="result-label" id="resultLeavenerLabel">
           FULLY ACTIVE SOURDOUGH STARTER
         </p>
 
-
-        <div
-          id="starterResult"
-          class="starter-result">
-
+        <div id="starterResult" class="starter-result">
           — <small>g</small>
-
         </div>
-
 
         <p id="resultDescription">
           Enter your recipe and batch size to calculate.
@@ -700,58 +554,26 @@
       </div>
 
 
-
       <div class="result-details">
 
         <div>
-
-          <span>
-            Total flour
-          </span>
-
-          <strong id="resultFlour">
-            —
-          </strong>
-
+          <span>Total flour</span>
+          <strong id="resultFlour">—</strong>
         </div>
 
-
         <div>
-
-          <span>
-            Total dough
-          </span>
-
-          <strong id="resultDough">
-            —
-          </strong>
-
+          <span>Total dough</span>
+          <strong id="resultDough">—</strong>
         </div>
 
-
         <div>
-
-          <span>
-            Pieces
-          </span>
-
-          <strong id="resultPieces">
-            —
-          </strong>
-
+          <span>Pieces</span>
+          <strong id="resultPieces">—</strong>
         </div>
 
-
         <div>
-
-          <span>
-            Piece weight
-          </span>
-
-          <strong id="resultPieceWeight">
-            —
-          </strong>
-
+          <span>Piece weight</span>
+          <strong id="resultPieceWeight">—</strong>
         </div>
 
       </div>
@@ -759,35 +581,18 @@
     </div>
 
 
-
-    <!-- =================================================
-         SCALED INGREDIENTS
-    ================================================== -->
+    <!-- SCALED INGREDIENTS -->
 
     <div class="panel ingredient-result-panel">
 
       <div class="result-table-title">
 
         <div>
-
-          <p class="eyebrow">
-            PRODUCTION FORMULA
-          </p>
-
-          <h3>
-            Ingredients to weigh
-          </h3>
-
+          <p class="eyebrow">PRODUCTION FORMULA</p>
+          <h3>Ingredients to weigh</h3>
         </div>
 
-
-        <div
-          id="resultModeLabel"
-          class="mode-label">
-
-          —
-
-        </div>
+        <div id="resultModeLabel" class="mode-label">—</div>
 
       </div>
 
@@ -795,35 +600,16 @@
       <div class="scaled-table">
 
         <div class="scaled-header">
-
-          <span>
-            INGREDIENT
-          </span>
-
-          <span>
-            BAKER'S %
-          </span>
-
-          <span>
-            WEIGHT
-          </span>
-
+          <span>INGREDIENT</span>
+          <span>BAKER'S %</span>
+          <span>WEIGHT</span>
         </div>
-
 
         <div id="scaledIngredientRows"></div>
 
-
         <div class="scaled-total">
-
-          <span>
-            Total dough
-          </span>
-
-          <strong id="scaledTotal">
-            —
-          </strong>
-
+          <span>Total dough</span>
+          <strong id="scaledTotal">—</strong>
         </div>
 
       </div>
@@ -834,72 +620,49 @@
 
 
 
-  <!-- =====================================================
-       INSTALL / OFFLINE INFO
-  ====================================================== -->
+  <!-- INSTALL / OFFLINE INFO -->
 
   <section class="install-info">
 
-    <div class="install-info-icon">
-      ⇩
-    </div>
+    <div class="install-info-icon">⇩</div>
 
     <div>
-
-      <h3>
-        Use PANDE-CALC offline
-      </h3>
+      <h3>Use PANDE-CALC offline</h3>
 
       <p id="installMessage">
         Once installed, PANDE-CALC can be used without an
-        internet connection. Your recipe quantities are saved
-        locally on this device.
+        internet connection. Your recipe quantities and settings
+        are saved locally on this device.
       </p>
 
       <div class="ios-note">
-
-        <strong>
-          iPhone / iPad:
-        </strong>
-
+        <strong>iPhone / iPad:</strong>
         Open PANDE-CALC in Safari, tap
         <strong>Share</strong>, then choose
         <strong>Add to Home Screen</strong>.
-
       </div>
-
     </div>
 
   </section>
 
 
 
-  <!-- =====================================================
-       EXPLANATION
-  ====================================================== -->
+  <!-- EXPLANATION -->
 
   <section class="info-box">
 
-    <div class="info-icon">
-      i
-    </div>
+    <div class="info-icon">i</div>
 
     <div>
+      <h3>How PANDE-CALC works</h3>
 
-      <h3>
-        How PANDE-CALC works
-      </h3>
-
-      <p id="calculationText">
-        Enter your recipe and batch size.
-      </p>
+      <p id="calculationText">Enter your recipe and batch size.</p>
 
       <p id="explanation">
-        PANDE-CALC will scale your formula to the exact
-        dough quantity needed for your order and calculate
-        the amount of fully active sourdough starter required.
+        PANDE-CALC scales your formula to the exact dough
+        quantity needed for your order. Your selected leavener
+        is included in the final dough weight.
       </p>
-
     </div>
 
   </section>
@@ -908,28 +671,16 @@
 
 
 
-<!-- =====================================================
-     FOOTER
-====================================================== -->
+<!-- FOOTER -->
 
 <footer class="site-footer">
 
   <div>
-
-    <strong>
-      PANDE-CALC
-    </strong>
-
-    <span>
-      Local recipe calculator
-    </span>
-
+    <strong>PANDE-CALC</strong>
+    <span>Local recipe calculator</span>
   </div>
 
-
-  <div id="offlineStatus">
-    Offline-ready
-  </div>
+  <div id="offlineStatus">Offline-ready</div>
 
 </footer>
 
