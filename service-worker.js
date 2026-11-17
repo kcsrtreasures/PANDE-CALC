@@ -1,5 +1,4 @@
-
-const CACHE_NAME = "pande-calc-v1";
+const CACHE_NAME = "pande-calc-v2";
 
 const APP_FILES = [
   "./",
@@ -10,72 +9,125 @@ const APP_FILES = [
   "./icon.svg"
 ];
 
-// INSTALL: CACHE THE APP FILES
 
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_FILES))
-      .then(() => self.skipWaiting())
-  );
-});
+self.addEventListener(
+  "install",
+  event => {
 
-// ACTIVATE: REMOVE OLD CACHES
+    event.waitUntil(
+      caches.open(CACHE_NAME)
+        .then(cache => {
+          return cache.addAll(APP_FILES);
+        })
+        .then(() => {
+          return self.skipWaiting();
+        })
+    );
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      );
-    }).then(() => self.clients.claim())
-  );
-});
+  }
+);
 
-// FETCH: SERVE CACHED FILES OFFLINE
 
-self.addEventListener("fetch", event => {
-  const request = event.request;
+self.addEventListener(
+  "activate",
+  event => {
 
-  if (request.method !== "GET") return;
+    event.waitUntil(
 
-  const url = new URL(request.url);
+      caches.keys()
+        .then(cacheNames => {
 
-  // Only handle requests from this app's own origin.
-  if (url.origin !== self.location.origin) return;
+          return Promise.all(
 
-  event.respondWith(
-    caches.match(request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+            cacheNames
+              .filter(name => {
+                return name !== CACHE_NAME;
+              })
+              .map(name => {
+                return caches.delete(name);
+              })
 
-      return fetch(request).then(response => {
-        if (
-          response &&
-          response.status === 200 &&
-          response.type === "basic"
-        ) {
-          const copy = response.clone();
+          );
 
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, copy);
+        })
+        .then(() => {
+          return self.clients.claim();
+        })
+
+    );
+
+  }
+);
+
+
+self.addEventListener(
+  "fetch",
+  event => {
+
+    if (
+      event.request.method !== "GET"
+    ) {
+      return;
+    }
+
+
+    event.respondWith(
+
+      caches.match(
+        event.request
+      )
+      .then(cached => {
+
+        if (cached) {
+          return cached;
+        }
+
+
+        return fetch(
+          event.request
+        )
+        .then(response => {
+
+          if (
+            !response ||
+            response.status !== 200 ||
+            response.type !== "basic"
+          ) {
+            return response;
+          }
+
+
+          const responseClone =
+            response.clone();
+
+
+          caches.open(
+            CACHE_NAME
+          )
+          .then(cache => {
+
+            cache.put(
+              event.request,
+              responseClone
+            );
+
           });
-        }
 
-        return response;
-      }).catch(() => {
-        if (request.mode === "navigate") {
-          return caches.match("./index.html");
-        }
 
-        return new Response("", {
-          status: 503,
-          statusText: "Offline"
+          return response;
+
+        })
+        .catch(() => {
+
+          return caches.match(
+            "./index.html"
+          );
+
         });
-      });
-    })
-  );
-});
+
+      })
+
+    );
+
+  }
+);

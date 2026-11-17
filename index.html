@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,241 +5,563 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="theme-color" content="#17231d">
-  <meta name="description" content="PANDE-CALC calculates the amount of fully active sourdough starter needed for your pandesal recipe.">
+  <meta name="description" content="PANDE-CALC sourdough pandesal calculator">
 
-  <title>PANDE-CALC | Pandesal Sourdough Calculator</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
 
-  <link rel="stylesheet" href="./style.css">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icon.svg">
+  <title>PANDE-CALC</title>
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PANDE-CALC">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    PANDE<span>-CALC</span>
-    <small>PANDESAL SOURDOUGH CALCULATOR</small>
+<header class="site-header">
+  <div>
+    <div class="brand">PANDE<span>-</span>CALC</div>
+    <p class="brand-subtitle">Sourdough Pandesal Calculator</p>
   </div>
 
-  <div class="topbar-actions">
-    <span id="connectionStatus" class="connection-status">
-      Checking connection...
-    </span>
-
-    <button class="install-btn" id="installBtn" hidden>
-      Install App
-    </button>
-
-    <button class="reset-btn" id="resetBtn">
-      Reset quantities
-    </button>
-  </div>
+  <button id="resetBtn" class="text-button" type="button">
+    Reset
+  </button>
 </header>
+
 
 <main class="container">
 
+  <!-- INTRO -->
   <section class="intro">
-    <div class="eyebrow">YOUR RECIPE. YOUR STARTER.</div>
+    <p class="eyebrow">YOUR RECIPE · YOUR BATCH · YOUR STARTER</p>
 
     <h1>
-      Make your pandesal<br>
-      <span>with sourdough.</span>
+      Calculate exactly what you need
+      for your pandesal order.
     </h1>
 
-    <p>
-      Enter your own pandesal ingredients and quantities.
-      PANDE-CALC calculates how much fully active sourdough
-      starter to add based on your flour quantity and settings.
+    <p class="intro-text">
+      Enter your recipe, choose your fermentation method,
+      then tell PANDE-CALC how many pieces you need and
+      how heavy each piece should be.
     </p>
   </section>
 
-  <section class="layout">
 
-    <!-- INGREDIENTS -->
+  <!-- =====================================================
+       01 RECIPE
+  ====================================================== -->
+  <section class="section-block">
+
+    <div class="section-heading">
+      <div class="section-number">01</div>
+
+      <div>
+        <h2>YOUR FORMULA</h2>
+        <p>Enter your recipe in grams or Baker's Percentage.</p>
+      </div>
+    </div>
+
 
     <div class="panel">
 
-      <div class="panel-heading">
-        <div>
-          <div class="step">01 / YOUR FORMULA</div>
-          <h2>Your ingredients</h2>
+      <div class="mode-switch">
+
+        <button
+          id="gramsModeBtn"
+          class="mode-button active"
+          type="button">
+          Grams
+        </button>
+
+        <button
+          id="bakersModeBtn"
+          class="mode-button"
+          type="button">
+          Baker's %
+        </button>
+
+      </div>
+
+
+      <!-- GRAMS MODE -->
+      <div id="gramsMode">
+
+        <div class="table-header">
+          <span>INGREDIENT</span>
+          <span>AMOUNT</span>
+          <span></span>
         </div>
 
-        <button class="small-btn" id="addBtn">
-          ＋ Add ingredient
+        <div id="ingredientRows"></div>
+
+        <button id="addBtn" class="add-button" type="button">
+          + Add ingredient
         </button>
+
+        <div class="total-row">
+          <span>Total flour</span>
+          <strong id="totalFlour">0 g</strong>
+        </div>
+
       </div>
 
-      <p class="helper">
-        Enter your own recipe quantities in grams.
-        Leave unused ingredients blank.
-      </p>
 
-      <div class="ingredient-head">
-        <span>INGREDIENT</span>
-        <span>AMOUNT (g)</span>
-        <span></span>
+      <!-- BAKER'S % MODE -->
+      <div id="bakersMode" class="hidden">
+
+        <div class="bakers-help">
+          <strong>How Baker's % works</strong>
+          <p>
+            Flour is always 100%. Enter the percentage of each
+            ingredient relative to your total flour.
+          </p>
+        </div>
+
+
+        <div class="flour-weight-box">
+
+          <label for="bakersFlourWeight">
+            TOTAL FLOUR WEIGHT
+          </label>
+
+          <div class="input-with-unit">
+            <input
+              id="bakersFlourWeight"
+              type="number"
+              min="0"
+              step="any"
+              placeholder="0">
+
+            <span>g</span>
+          </div>
+
+          <small>
+            This is the actual flour weight you want to use.
+          </small>
+
+        </div>
+
+
+        <div class="table-header baker-header">
+          <span>INGREDIENT</span>
+          <span>BAKER'S %</span>
+          <span></span>
+        </div>
+
+        <div id="bakerRows"></div>
+
+        <button id="addBakerBtn" class="add-button" type="button">
+          + Add ingredient
+        </button>
+
+
+        <div class="bakers-summary">
+
+          <div>
+            <span>Total flour</span>
+            <strong id="bakerTotalFlour">0 g</strong>
+          </div>
+
+          <div>
+            <span>Formula total</span>
+            <strong id="formulaTotalPercent">100%</strong>
+          </div>
+
+        </div>
+
       </div>
 
-      <div id="ingredientRows"></div>
+    </div>
+  </section>
 
-      <div class="total-row">
-        <span>Total flour</span>
-        <strong id="totalFlour">0 g</strong>
+
+
+  <!-- =====================================================
+       02 BATCH SIZE
+  ====================================================== -->
+  <section class="section-block">
+
+    <div class="section-heading">
+      <div class="section-number">02</div>
+
+      <div>
+        <h2>BATCH SIZE</h2>
+        <p>Tell PANDE-CALC what your customer ordered.</p>
+      </div>
+    </div>
+
+
+    <div class="panel">
+
+      <div class="batch-grid">
+
+        <div class="field-card">
+
+          <label for="pieceCount">
+            NUMBER OF PIECES
+          </label>
+
+          <input
+            id="pieceCount"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="150">
+
+          <small>
+            How many pandesal pieces do you need?
+          </small>
+
+        </div>
+
+
+        <div class="field-card">
+
+          <label for="pieceWeight">
+            WEIGHT PER PIECE
+          </label>
+
+          <div class="input-with-unit">
+
+            <input
+              id="pieceWeight"
+              type="number"
+              min="0"
+              step="any"
+              placeholder="55">
+
+            <span>g</span>
+
+          </div>
+
+          <small>
+            Target dough weight before baking.
+          </small>
+
+        </div>
+
+
+        <div class="field-card">
+
+          <label for="wastagePercent">
+            PRODUCTION ALLOWANCE
+          </label>
+
+          <div class="input-with-unit">
+
+            <input
+              id="wastagePercent"
+              type="number"
+              min="0"
+              max="50"
+              step="0.5"
+              value="0">
+
+            <span>%</span>
+
+          </div>
+
+          <small>
+            Optional allowance for dough loss and rounding.
+          </small>
+
+        </div>
+
       </div>
 
-      <div class="note">
-        Bread flour and all-purpose flour count toward total flour.
-        You can add more flour types using Add Ingredient.
+
+      <div class="production-summary">
+
+        <div>
+          <span>Customer order</span>
+          <strong id="orderSummary">—</strong>
+        </div>
+
+        <div>
+          <span>Base dough required</span>
+          <strong id="baseDoughRequired">—</strong>
+        </div>
+
+        <div>
+          <span>Production allowance</span>
+          <strong id="allowanceDough">—</strong>
+        </div>
+
+        <div class="highlight">
+          <span>Total dough to prepare</span>
+          <strong id="totalDoughRequired">—</strong>
+        </div>
+
       </div>
 
     </div>
 
-    <!-- CALCULATOR -->
+  </section>
 
-    <div class="panel">
 
-      <div class="step">02 / FERMENTATION</div>
-      <h2>Choose your plan</h2>
 
-      <div class="plan-options">
+  <!-- =====================================================
+       03 FERMENTATION
+  ====================================================== -->
+  <section class="section-block">
 
-        <label class="plan-card selected" id="sameCard">
-          <input
-            type="radio"
-            name="plan"
-            value="same"
-            checked
-          >
+    <div class="section-heading">
+      <div class="section-number">03</div>
 
-          <span class="plan-icon">☀</span>
-
-          <span class="plan-copy">
-            <strong>Same-day</strong>
-            <small>Make and bake on the same day</small>
-          </span>
-        </label>
-
-        <label class="plan-card" id="overnightCard">
-          <input
-            type="radio"
-            name="plan"
-            value="overnight"
-          >
-
-          <span class="plan-icon">☾</span>
-
-          <span class="plan-copy">
-            <strong>Overnight</strong>
-            <small>Fermentation in the refrigerator</small>
-          </span>
-        </label>
-
+      <div>
+        <h2>FERMENTATION</h2>
+        <p>Choose your fermentation plan.</p>
       </div>
+    </div>
 
-      <div class="step">03 / STARTER SETTINGS</div>
-      <h2>Starter percentage</h2>
 
-      <div class="percentage-row">
-        <span class="helper">
-          Starter weight relative to total flour
-        </span>
+    <div class="plan-grid">
 
-        <span class="percentage-value" id="percentageValue">
-          20%
-        </span>
-      </div>
+      <label class="plan-card selected" id="sameCard">
 
-      <input
-        type="range"
-        id="starterPercentage"
-        min="5"
-        max="50"
-        step="1"
-        value="20"
-      >
+        <input
+          type="radio"
+          name="plan"
+          value="same"
+          checked>
 
-      <div class="range-labels">
-        <span>5%</span>
-        <span>50%</span>
-      </div>
+        <div class="plan-content">
 
-      <p class="helper">
-        Change the percentage whenever you want.
-        The starter amount updates automatically.
-      </p>
+          <div class="plan-title">
+            Same-day
+          </div>
 
-      <div class="result-label step">
-        04 / YOUR RESULT
-      </div>
+          <div class="plan-percentage">
+            20%
+          </div>
 
-      <h2>Starter required</h2>
+          <p>
+            Suggested starter percentage
+          </p>
 
-      <div class="result-card">
-
-        <div class="result-caption">
-          FULLY ACTIVE SOURDOUGH STARTER
         </div>
 
-        <div class="result-number" id="starterResult">
+      </label>
+
+
+      <label class="plan-card" id="overnightCard">
+
+        <input
+          type="radio"
+          name="plan"
+          value="overnight">
+
+        <div class="plan-content">
+
+          <div class="plan-title">
+            Overnight refrigerated
+          </div>
+
+          <div class="plan-percentage">
+            10%
+          </div>
+
+          <p>
+            Suggested starter percentage
+          </p>
+
+        </div>
+
+      </label>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       04 STARTER
+  ====================================================== -->
+  <section class="section-block">
+
+    <div class="section-heading">
+      <div class="section-number">04</div>
+
+      <div>
+        <h2>STARTER SETTINGS</h2>
+        <p>Set how much fully active starter you want to use.</p>
+      </div>
+    </div>
+
+
+    <div class="panel starter-panel">
+
+      <div class="starter-setting">
+
+        <div class="setting-label">
+          <span>STARTER PERCENTAGE</span>
+          <strong id="percentageValue">20%</strong>
+        </div>
+
+        <input
+          id="starterPercentage"
+          type="range"
+          min="5"
+          max="50"
+          step="1"
+          value="20">
+
+        <div class="slider-labels">
+          <span>5%</span>
+          <span>50%</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       05 RESULTS
+  ====================================================== -->
+  <section class="section-block">
+
+    <div class="section-heading">
+      <div class="section-number">05</div>
+
+      <div>
+        <h2>YOUR RESULT</h2>
+        <p>Your scaled production formula.</p>
+      </div>
+    </div>
+
+
+    <div class="result-card">
+
+      <div class="result-main">
+
+        <p class="result-label">
+          FULLY ACTIVE SOURDOUGH STARTER
+        </p>
+
+        <div id="starterResult" class="starter-result">
           — <small>g</small>
         </div>
 
-        <div class="result-sub" id="resultDescription">
-          Enter your flour quantities to calculate.
+        <p id="resultDescription">
+          Enter your recipe and batch size to calculate.
+        </p>
+
+      </div>
+
+
+      <div class="result-details">
+
+        <div>
+          <span>Total flour</span>
+          <strong id="resultFlour">—</strong>
         </div>
 
-        <div class="result-divider"></div>
+        <div>
+          <span>Total dough</span>
+          <strong id="resultDough">—</strong>
+        </div>
 
-        <div class="result-meta">
-          <span>Calculation</span>
-          <strong id="calculationText">
-            Waiting for flour
-          </strong>
+        <div>
+          <span>Pieces</span>
+          <strong id="resultPieces">—</strong>
+        </div>
+
+        <div>
+          <span>Piece weight</span>
+          <strong id="resultPieceWeight">—</strong>
         </div>
 
       </div>
 
-      <div class="explanation" id="explanation">
-        Starter amount is calculated from total flour multiplied
-        by your selected starter percentage.
+    </div>
+
+
+    <!-- SCALED INGREDIENTS -->
+    <div class="panel ingredient-result-panel">
+
+      <div class="result-table-title">
+        <div>
+          <p class="eyebrow">PRODUCTION FORMULA</p>
+          <h3>Ingredients to weigh</h3>
+        </div>
+
+        <div id="resultModeLabel" class="mode-label">
+          —
+        </div>
+      </div>
+
+
+      <div class="scaled-table">
+
+        <div class="scaled-header">
+          <span>INGREDIENT</span>
+          <span>BAKER'S %</span>
+          <span>WEIGHT</span>
+        </div>
+
+        <div id="scaledIngredientRows"></div>
+
+        <div class="scaled-total">
+          <span>Total dough</span>
+          <strong id="scaledTotal">—</strong>
+        </div>
+
       </div>
 
     </div>
 
   </section>
 
-  <div class="info-box">
-    <p>
-      <strong>Important:</strong>
-      The percentage is starter weight divided by total recipe flour.
-      The initial suggestions are 20% for same-day fermentation
-      and 10% for overnight refrigeration.
-      These are starting estimates, not guaranteed fermentation formulas.
-      Actual timing depends on starter activity, dough temperature,
-      room temperature and recipe composition.
-    </p>
-  </div>
 
-  <div class="ios-install-note" id="iosInstallNote">
-    <strong>Using an iPhone?</strong>
-    Open this page in Safari, tap the Share button, then choose
-    "Add to Home Screen" to install PANDE-CALC.
-  </div>
 
-  <footer>
-    PANDE-CALC · Your recipe stays in your browser.
-  </footer>
+  <!-- EXPLANATION -->
+  <section class="info-box">
+
+    <div class="info-icon">i</div>
+
+    <div>
+
+      <h3>How PANDE-CALC works</h3>
+
+      <p id="calculationText">
+        Enter your recipe and batch size.
+      </p>
+
+      <p id="explanation">
+        PANDE-CALC will scale your formula to the exact
+        dough quantity needed for your order and calculate
+        the amount of fully active sourdough starter required.
+      </p>
+
+    </div>
+
+  </section>
+
 
 </main>
 
-<script src="./script.js"></script>
+
+<footer class="site-footer">
+
+  <div>
+    <strong>PANDE-CALC</strong>
+    <span>Local recipe calculator</span>
+  </div>
+
+  <div id="offlineStatus">
+    Offline-ready
+  </div>
+
+</footer>
+
+
+<script src="script.js"></script>
 
 </body>
 </html>
