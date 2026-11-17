@@ -1,4 +1,5 @@
-const CACHE_NAME = "pande-calc-v3";
+
+const CACHE_NAME = "pande-calc-v4";
 
 const APP_FILES = [
   "./",
@@ -9,6 +10,10 @@ const APP_FILES = [
   "./icon.svg"
 ];
 
+
+// ==========================================
+// INSTALL
+// ==========================================
 
 self.addEventListener(
   "install",
@@ -42,6 +47,9 @@ self.addEventListener(
 );
 
 
+// ==========================================
+// ACTIVATE
+// ==========================================
 
 self.addEventListener(
   "activate",
@@ -58,13 +66,18 @@ self.addEventListener(
               cacheNames
                 .filter(
                   name =>
+
+                    name.startsWith("pande-calc-") &&
                     name !== CACHE_NAME
+
                 )
                 .map(
                   name =>
+
                     caches.delete(
                       name
                     )
+
                 )
 
             );
@@ -85,6 +98,9 @@ self.addEventListener(
 );
 
 
+// ==========================================
+// FETCH
+// ==========================================
 
 self.addEventListener(
   "fetch",
@@ -99,43 +115,51 @@ self.addEventListener(
     }
 
 
+    const request =
+      event.request;
+
+    const url =
+      new URL(request.url);
+
+
+    // Only handle requests from this app.
+
+    if (
+      url.origin !== self.location.origin
+    ) {
+
+      return;
+
+    }
+
+
+    // Network-first strategy:
+    // Always try to get the latest version.
+    // Use cached files when offline.
+
     event.respondWith(
 
-      caches.match(
-        event.request
-      )
-      .then(
-        cached => {
+      fetch(request)
 
-          if (
-            cached
-          ) {
+        .then(
+          response => {
 
-            return cached;
+            if (
+              !response ||
+              response.status !== 200 ||
+              response.type !== "basic"
+            ) {
 
-          }
+              return response;
 
-
-          return fetch(
-            event.request
-          )
-          .then(
-            response => {
-
-              if (
-                !response ||
-                response.status !== 200 ||
-                response.type !== "basic"
-              ) {
-
-                return response;
-
-              }
+            }
 
 
-              const clone =
-                response.clone();
+            const clone =
+              response.clone();
 
+
+            event.waitUntil(
 
               caches.open(
                 CACHE_NAME
@@ -143,31 +167,62 @@ self.addEventListener(
               .then(
                 cache => {
 
-                  cache.put(
-                    event.request,
+                  return cache.put(
+                    request,
                     clone
                   );
 
                 }
-              );
+              )
+
+            );
 
 
-              return response;
+            return response;
+
+          }
+        )
+
+        .catch(
+          async () => {
+
+            const cached = await caches.match(
+              request
+            );
+
+
+            if (
+              cached
+            ) {
+
+              return cached;
 
             }
-          )
-          .catch(
-            () => {
+
+
+            // Show the app when navigating offline.
+
+            if (
+              request.mode === "navigate"
+            ) {
 
               return caches.match(
                 "./index.html"
               );
 
             }
-          );
 
-        }
-      )
+
+            return new Response(
+              "You are offline and this file is not cached.",
+              {
+                status: 503,
+                statusText: "Offline"
+              }
+            );
+
+          }
+        )
 
     );
 
