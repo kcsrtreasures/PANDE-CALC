@@ -22,7 +22,7 @@ const ACTIVE_DRY_YEAST_GRAMS_PER_TSP = 3.3;
 const DEFAULT_LEAVENING_SETTINGS = {
   method: "sourdough",
   starterPercent: { same: 20, overnight: 10 },
-  instantYeastPercent: { same: 1.25, overnight: 0.30 },
+  instantYeastPercent: { same: 1.72, overnight: 0.30 },
   instantYeastGrams: 0,
   instantInputMode: "manual",
   instantUnit: "g",
